@@ -21,5 +21,7 @@ while true ; do
     if [ $(( now - last_press )) -gt $MIN_INTERVAL_FOR_PRESSES ] ; then
         "$script_dir/printfortune.sh"
         last_press=$now
+    else
+	echo `date` - button press ignored, only $(( now - last_press )) seconds since last press
     fi
 done
