@@ -10,9 +10,14 @@ fortune=$( "$script_dir/getfortune.sh" )
 echo $( date ) -- button pressed
 echo "$fortune"
 
-# My receipt printer can print 32 characters on a line.
-# Use `fold` to make things fit:
-echo "$fortune" | fold -w 32 -s > $PRINTER_DEVICE
+# - My receipt printer can print 32 characters on a line.
+#   Use `fold` to make things fit
+# - Some of my fortune files have Unicode characters.
+#   Use `iconv` to convert to ASCII
+echo "$fortune" | \
+	fold -w 32 -s | \
+	iconv --from-code=UTF-8 --to-code=ASCII//TRANSLIT \
+	> $PRINTER_DEVICE
 
 # print a few blank lines, to feed some paper through
 for n in $( seq $FEED_LINES ) ; do
