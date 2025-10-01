@@ -66,13 +66,37 @@ sudo cp stuff.dat /usr/share/games/fortunes/
 sudo ln -s /usr/share/games/fortunes/stuff{,.u8}
 ```
 
+Architecture
+------------
+
+("Architecture" -- ha! I'm hilarious.)
+
+The call chain goes like this:
+
+- `cron` runs `start-fortune.sh` at boot time
+- `start-fortune.sh` runs `button_watch.sh`
+- `button_watch.sh` ...
+    - sources `config.sh`
+	- runs a loop
+    - which uses `gpio` to wait for a button press
+    - and then runs `printfortune.sh`
+- `printfortune.sh` ...
+    - runs `getfortune.sh` (which calls `fortune` with options, and formats the text) 
+    - echo's the text to the printer device 
+	- runs any scripts in `on-press.d/`
+- and the loop starts again
+
+
 TODO
 ----
 
 - Just put everything in one file
-  Original reason to use separate files may have been to make it easier to test.  
-  Ex: I can run `getfortune.sh` to fetch a fortune without printing; but there
-  are ways to do that with a single file still
+  - My original reason to use separate files may have been to make it easier to
+	test.  Ex: I can run `getfortune.sh` to fetch a fortune without printing;
+    but there are ways to do that with a single file still.
+  - But also, having separate files also means I can almost any of the files
+    (except `button_watch.sh` or `start-fortune.sh`) and changes will take
+    effect on the next button press without having to restart anything.
 - shfmt and linting and general cleanup
 - document the hardware (it's a button connected to one of the Pi's GPIO pins)
-
+- add a photo of the fortune printer
