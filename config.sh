@@ -34,4 +34,5 @@ FORTUNE_FILES=(
     "hillary-medical"
     "allstar"
     "max"
+    "soulcoughing"
 )
